@@ -6,7 +6,6 @@
     <title>برنامه‌ریزی هوشمند</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <style>
-        /* --- بخش استایل (CSS) --- */
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&display=swap');
         
         :root {
@@ -32,51 +31,71 @@
         h1 { font-size: 20px; font-weight: 800; color: var(--text); }
 
         .input-card { background: #f1f5f9; padding: 12px; border-radius: 15px; margin-bottom: 15px; }
-        input { border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px; font-size: 14px; outline: none; }
-        #inputBox { width: 100%; margin-bottom: 10px; }
+        input { border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px; font-size: 14px; outline: none; width: 100%; }
+        #inputBox { margin-bottom: 12px; }
         
-        .time-row { display: flex; gap: 6px; align-items: flex-end; }
-        .time-group { display: flex; flex-direction: column; flex: 1; gap: 3px; }
-        .time-group label { font-size: 10px; font-weight: 800; color: #64748b; margin-right: 5px; }
-        .time-row input { text-align: center; padding: 6px 2px; background: white; }
+        /* اصلاح چیدمان برای جلوگیری از بیرون زدن کادر مدت */
+        .time-row { 
+            display: flex; 
+            flex-direction: column; /* در موبایل زیر هم باشند */
+            gap: 10px; 
+        }
+
+        .time-inputs-wrapper {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .time-group { 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1; 
+            gap: 3px; 
+        }
+
+        .time-group label { font-size: 11px; font-weight: 800; color: #64748b; margin-right: 5px; }
+        .time-row input { text-align: center; padding: 10px 2px; background: white; }
         
         #addBtn { 
-            background: var(--primary); color: white; border: none; height: 38px; 
-            border-radius: 8px; cursor: pointer; flex: 1.5; font-weight: bold; font-size: 13px;
+            background: var(--primary); color: white; border: none; height: 45px; 
+            border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* چیدمان افقی فقط برای نمایشگرهای بزرگتر */
+        @media (min-width: 400px) {
+            .time-row { flex-direction: row; align-items: flex-end; }
+            #addBtn { height: 38px; flex: 1.5; margin-top: 0; }
         }
 
         #todoList { list-style: none; flex-grow: 1; }
         li {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 10px; border-radius: 12px; border: 1px solid #f1f5f9;
-            margin-bottom: 6px; background: #fff; transition: 0.3s;
+            padding: 10px; border-radius: 12px; border: 1px solid #f1f5f9;
+            margin-bottom: 8px; background: #fff; transition: 0.3s;
         }
 
         .task-main { display: flex; align-items: center; gap: 10px; flex: 1; }
-        .time-display { font-size: 14px; font-weight: 800; color: var(--primary); min-width: 95px; direction: ltr; }
+        .time-display { font-size: 13px; font-weight: 800; color: var(--primary); min-width: 90px; direction: ltr; text-align: left; }
         .task-info { display: flex; flex-direction: column; }
-        .task-title { font-size: 13px; font-weight: 600; color: #334155; }
+        .task-title { font-size: 14px; font-weight: 600; color: #334155; }
         .duration-label { font-size: 10px; color: #94a3b8; }
 
-        /* وضعیت انجام شده */
         li.completed { background: #f0fdf4; border-color: #dcfce7; opacity: 0.6; }
-        li.completed .time-display { color: var(--success); }
-
         .actions { display: flex; gap: 12px; align-items: center; }
-        .btn-edit { color: #94a3b8; cursor: pointer; font-size: 14px; }
-        .btn-check { color: #cbd5e1; font-size: 20px; cursor: pointer; }
+        .btn-edit { color: #94a3b8; cursor: pointer; font-size: 15px; }
+        .btn-check { color: #cbd5e1; font-size: 22px; cursor: pointer; }
         li.completed .btn-check { color: var(--success); }
-        .btn-del { color: #fca5a5; cursor: pointer; font-size: 14px; }
+        .btn-del { color: #fca5a5; cursor: pointer; font-size: 15px; }
 
         .stats-bar { margin-top: auto; padding-top: 10px; border-top: 1px dashed #e2e8f0; display: flex; justify-content: space-between; font-size: 11px; }
         .utility-btns { display: flex; gap: 8px; }
-        .btn-export { background: #334155; color: white; border: none; padding: 4px 10px; border-radius: 6px; cursor: pointer; }
+        .btn-export { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
         .btn-clear { background: none; border: none; color: #ef4444; cursor: pointer; }
 
-        /* حالت اسکرین‌شات */
         .screenshot-mode .input-card, .screenshot-mode .btn-del, 
         .screenshot-mode .btn-edit, .screenshot-mode .btn-clear { display: none !important; }
-        .screenshot-mode .app-container { box-shadow: none; border: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -91,37 +110,39 @@
         </header>
 
         <section class="input-card" id="inputSection">
-            <input type="text" id="inputBox" placeholder="چه کاری انجام می‌دهی؟">
+            <input type="text" id="inputBox" placeholder="عنوان کار...">
+            
             <div class="time-row">
-                <div class="time-group">
-                    <label>از</label>
-                    <input type="time" id="fromTime">
+                <div class="time-inputs-wrapper">
+                    <div class="time-group">
+                        <label>از ساعت</label>
+                        <input type="time" id="fromTime">
+                    </div>
+                    <div class="time-group">
+                        <label>تا ساعت</label>
+                        <input type="time" id="toTime">
+                    </div>
+                    <div class="time-group">
+                        <label>مدت</label>
+                        <input type="text" id="duration" placeholder="--">
+                    </div>
                 </div>
-                <div class="time-group">
-                    <label>تا</label>
-                    <input type="time" id="toTime">
-                </div>
-                <div class="time-group">
-                    <label>مدت</label>
-                    <input type="text" id="duration" placeholder="--">
-                </div>
-                <button id="addBtn">ثبت <i class="fas fa-plus"></i></button>
+                <button id="addBtn">ثبت کار <i class="fas fa-plus"></i></button>
             </div>
         </section>
 
         <ul id="todoList"></ul>
 
         <div class="stats-bar">
-            <span>تعداد کل: <b id="totalCount">0</b></span>
+            <span>تعداد: <b id="totalCount">0</b></span>
             <div class="utility-btns">
-                <button onclick="toggleExportMode()" class="btn-export" id="exportBtn">حالت اسکرین‌شات</button>
+                <button onclick="toggleExportMode()" class="btn-export" id="exportBtn">حالت تصویر</button>
                 <button id="clearBtn" class="btn-clear">حذف همه</button>
             </div>
         </div>
     </div>
 
     <script>
-        /* --- بخش منطق (JavaScript) --- */
         let tasks = JSON.parse(localStorage.getItem("final_todo_app")) || [];
         let editIndex = null;
 
@@ -132,12 +153,10 @@
         const addBtn = document.getElementById("addBtn");
         const todoList = document.getElementById("todoList");
 
-        // تنظیم تاریخ شمسی خودکار
         document.getElementById("shamsiDate").textContent = new Date().toLocaleDateString('fa-IR', { 
             weekday: 'long', day: 'numeric', month: 'long' 
         });
 
-        // محاسبه خودکار مدت زمان
         function calculateDuration() {
             if (fromInput.value && toInput.value) {
                 let start = fromInput.value.split(':');
@@ -153,14 +172,11 @@
         fromInput.onchange = toInput.onchange = calculateDuration;
 
         function render() {
-            // مرتب‌سازی زمانی
             tasks.sort((a, b) => a.from.localeCompare(b.from));
-
             todoList.innerHTML = "";
             tasks.forEach((task, index) => {
                 const li = document.createElement("li");
                 if (task.done) li.classList.add("completed");
-
                 li.innerHTML = `
                     <div class="task-main">
                         <span class="time-display">${task.from} - ${task.to}</span>
@@ -173,8 +189,7 @@
                         <i class="fas fa-edit btn-edit" onclick="editTask(${index})"></i>
                         <i class="fas fa-check-circle btn-check" onclick="toggleTask(${index})"></i>
                         <i class="fas fa-trash-alt btn-del" onclick="deleteTask(${index})"></i>
-                    </div>
-                `;
+                    </div>`;
                 todoList.appendChild(li);
             });
             document.getElementById("totalCount").textContent = tasks.length;
@@ -190,16 +205,14 @@
                     dur: durInput.value || "--",
                     done: false
                 };
-
                 if (editIndex !== null) {
                     tasks[editIndex] = taskData;
                     editIndex = null;
-                    addBtn.innerHTML = 'ثبت <i class="fas fa-plus"></i>';
+                    addBtn.innerHTML = 'ثبت کار <i class="fas fa-plus"></i>';
                     addBtn.style.background = "#6366f1";
                 } else {
                     tasks.push(taskData);
                 }
-
                 inputBox.value = ""; fromInput.value = ""; toInput.value = ""; durInput.value = "";
                 render();
             }
@@ -209,22 +222,19 @@
             const t = tasks[index];
             inputBox.value = t.text; fromInput.value = t.from; toInput.value = t.to; durInput.value = t.dur;
             editIndex = index;
-            addBtn.innerHTML = 'ذخیره <i class="fas fa-save"></i>';
+            addBtn.innerHTML = 'ذخیره تغییرات <i class="fas fa-save"></i>';
             addBtn.style.background = "#f59e0b";
             window.scrollTo(0,0);
         };
 
         window.toggleTask = (i) => { tasks[i].done = !tasks[i].done; render(); };
         window.deleteTask = (i) => { if(confirm("حذف شود؟")) { tasks.splice(i, 1); render(); } };
-
         window.toggleExportMode = () => {
             document.body.classList.toggle("screenshot-mode");
             document.getElementById("exportBtn").textContent = 
-                document.body.classList.contains("screenshot-mode") ? "ویرایش دوباره" : "حالت اسکرین‌شات";
+                document.body.classList.contains("screenshot-mode") ? "ویرایش" : "حالت تصویر";
         };
-
         document.getElementById("clearBtn").onclick = () => { if(confirm("لیست کاملاً پاک شود؟")) { tasks = []; render(); } };
-
         render();
     </script>
 </body>
