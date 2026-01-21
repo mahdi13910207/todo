@@ -3,99 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>برنامه‌ریزی هوشمند</title>
+    <title>Planner 20 Tasks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;800&display=swap');
         
-        :root {
-            --primary: #6366f1;
-            --success: #10b981;
-            --bg: #f8fafc;
-            --text: #1e293b;
-        }
-
+        :root { --primary: #6366f1; --success: #10b981; --bg: #f8fafc; --text: #1e293b; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
-        body { background-color: var(--bg); display: flex; justify-content: center; padding: 10px; direction: rtl; }
+        body { background-color: var(--bg); display: flex; justify-content: center; padding: 5px; direction: rtl; }
 
         .app-container {
-            width: 100%; max-width: 450px; background: white; border-radius: 20px;
-            padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            display: flex; flex-direction: column; min-height: 92vh;
+            width: 100%; max-width: 450px; background: white; border-radius: 15px;
+            padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; min-height: 95vh;
         }
 
-        header { margin-bottom: 15px; }
-        .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        #shamsiDate { font-size: 13px; color: #64748b; font-weight: 500; }
-        .badge { background: #e0e7ff; color: var(--primary); padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; }
-        h1 { font-size: 20px; font-weight: 800; color: var(--text); }
+        header { margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .status-bar { display: flex; justify-content: space-between; align-items: center; }
+        #shamsiDate { font-size: 11px; color: #64748b; }
+        h1 { font-size: 16px; font-weight: 800; }
 
-        .input-card { background: #f1f5f9; padding: 12px; border-radius: 15px; margin-bottom: 15px; }
-        input { border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px; font-size: 14px; outline: none; width: 100%; }
-        #inputBox { margin-bottom: 12px; }
-        
-        /* اصلاح چیدمان برای جلوگیری از بیرون زدن کادر مدت */
-        .time-row { 
-            display: flex; 
-            flex-direction: column; /* در موبایل زیر هم باشند */
-            gap: 10px; 
-        }
+        .input-card { background: #f1f5f9; padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        input { border: 1px solid #cbd5e1; border-radius: 5px; padding: 5px; font-size: 13px; outline: none; width: 100%; }
+        #inputBox { margin-bottom: 8px; }
+        .time-row { display: flex; flex-direction: column; gap: 5px; }
+        .time-inputs-wrapper { display: flex; gap: 5px; width: 100%; }
+        .time-group { display: flex; flex-direction: column; flex: 1; }
+        .time-group label { font-size: 9px; font-weight: 800; color: #64748b; }
+        #addBtn { background: var(--primary); color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px; }
 
-        .time-inputs-wrapper {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .time-group { 
-            display: flex; 
-            flex-direction: column; 
-            flex: 1; 
-            gap: 3px; 
-        }
-
-        .time-group label { font-size: 11px; font-weight: 800; color: #64748b; margin-right: 5px; }
-        .time-row input { text-align: center; padding: 10px 2px; background: white; }
-        
-        #addBtn { 
-            background: var(--primary); color: white; border: none; height: 45px; 
-            border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 14px;
-            margin-top: 5px;
-        }
-
-        /* چیدمان افقی فقط برای نمایشگرهای بزرگتر */
-        @media (min-width: 400px) {
-            .time-row { flex-direction: row; align-items: flex-end; }
-            #addBtn { height: 38px; flex: 1.5; margin-top: 0; }
-        }
-
-        #todoList { list-style: none; flex-grow: 1; }
+        /* لیست بسیار فشرده */
+        #todoList { list-style: none; }
         li {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px; border-radius: 12px; border: 1px solid #f1f5f9;
-            margin-bottom: 8px; background: #fff; transition: 0.3s;
+            padding: 4px 6px; border-bottom: 1px solid #f8fafc;
+            background: #fff; margin-bottom: 2px;
         }
 
-        .task-main { display: flex; align-items: center; gap: 10px; flex: 1; }
-        .time-display { font-size: 13px; font-weight: 800; color: var(--primary); min-width: 90px; direction: ltr; text-align: left; }
-        .task-info { display: flex; flex-direction: column; }
-        .task-title { font-size: 14px; font-weight: 600; color: #334155; }
-        .duration-label { font-size: 10px; color: #94a3b8; }
+        .task-main { display: flex; align-items: center; gap: 8px; flex: 1; overflow: hidden; }
+        .time-display { font-size: 12px; font-weight: 800; color: var(--primary); min-width: 85px; direction: ltr; text-align: left; }
+        .task-title { font-size: 12px; font-weight: 600; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .dur-tag { font-size: 9px; color: #94a3b8; margin-right: 4px; }
 
-        li.completed { background: #f0fdf4; border-color: #dcfce7; opacity: 0.6; }
-        .actions { display: flex; gap: 12px; align-items: center; }
-        .btn-edit { color: #94a3b8; cursor: pointer; font-size: 15px; }
-        .btn-check { color: #cbd5e1; font-size: 22px; cursor: pointer; }
+        li.completed { background: #f0fdf4; opacity: 0.6; }
+        .actions { display: flex; gap: 8px; align-items: center; }
+        .btn-edit, .btn-del { color: #cbd5e1; font-size: 12px; cursor: pointer; }
+        .btn-check { color: #cbd5e1; font-size: 16px; cursor: pointer; }
         li.completed .btn-check { color: var(--success); }
-        .btn-del { color: #fca5a5; cursor: pointer; font-size: 15px; }
 
-        .stats-bar { margin-top: auto; padding-top: 10px; border-top: 1px dashed #e2e8f0; display: flex; justify-content: space-between; font-size: 11px; }
-        .utility-btns { display: flex; gap: 8px; }
-        .btn-export { background: #334155; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
-        .btn-clear { background: none; border: none; color: #ef4444; cursor: pointer; }
+        .stats-bar { margin-top: auto; padding-top: 5px; display: flex; justify-content: space-between; font-size: 10px; }
+        .btn-export { background: #334155; color: white; border: none; padding: 3px 8px; border-radius: 4px; }
+        .btn-clear { color: #ef4444; border: none; background: none; font-size: 10px; }
 
-        .screenshot-mode .input-card, .screenshot-mode .btn-del, 
-        .screenshot-mode .btn-edit, .screenshot-mode .btn-clear { display: none !important; }
+        /* حالت اسکرین‌شات: نمایش ۲۰ مورد در یک صفحه */
+        .screenshot-mode .input-card, .screenshot-mode .actions, .screenshot-mode .btn-clear { display: none !important; }
+        .screenshot-mode li { padding: 2px 5px; border-bottom: 1px solid #eee; }
+        .screenshot-mode .time-display { color: #000; font-size: 11px; min-width: 75px; }
+        .screenshot-mode .task-title { font-size: 11px; color: #000; }
+        .screenshot-mode .app-container { min-height: auto; box-shadow: none; border: 1px solid #ccc; }
     </style>
 </head>
 <body>
@@ -103,31 +68,20 @@
     <div class="app-container">
         <header>
             <div class="status-bar">
-                <span id="shamsiDate">تاریخ امروز</span>
-                <span class="badge">گزارش روزانه</span>
+                <span id="shamsiDate"></span>
+                <h1>گزارش عملکرد</h1>
             </div>
-            <h1>برنامه‌ریزی من</h1>
         </header>
 
         <section class="input-card" id="inputSection">
             <input type="text" id="inputBox" placeholder="عنوان کار...">
-            
             <div class="time-row">
                 <div class="time-inputs-wrapper">
-                    <div class="time-group">
-                        <label>از ساعت</label>
-                        <input type="time" id="fromTime">
-                    </div>
-                    <div class="time-group">
-                        <label>تا ساعت</label>
-                        <input type="time" id="toTime">
-                    </div>
-                    <div class="time-group">
-                        <label>مدت</label>
-                        <input type="text" id="duration" placeholder="--">
-                    </div>
+                    <div class="time-group"><label>از</label><input type="time" id="fromTime"></div>
+                    <div class="time-group"><label>تا</label><input type="time" id="toTime"></div>
+                    <div class="time-group"><label>مدت</label><input type="text" id="duration" placeholder="--"></div>
                 </div>
-                <button id="addBtn">ثبت کار <i class="fas fa-plus"></i></button>
+                <button id="addBtn">ثبت</button>
             </div>
         </section>
 
@@ -143,7 +97,7 @@
     </div>
 
     <script>
-        let tasks = JSON.parse(localStorage.getItem("final_todo_app")) || [];
+        let tasks = JSON.parse(localStorage.getItem("ultra_todo")) || [];
         let editIndex = null;
 
         const inputBox = document.getElementById("inputBox");
@@ -153,9 +107,7 @@
         const addBtn = document.getElementById("addBtn");
         const todoList = document.getElementById("todoList");
 
-        document.getElementById("shamsiDate").textContent = new Date().toLocaleDateString('fa-IR', { 
-            weekday: 'long', day: 'numeric', month: 'long' 
-        });
+        document.getElementById("shamsiDate").textContent = new Date().toLocaleDateString('fa-IR', { weekday: 'long', day: 'numeric', month: 'long' });
 
         function calculateDuration() {
             if (fromInput.value && toInput.value) {
@@ -163,8 +115,7 @@
                 let end = toInput.value.split(':');
                 let diff = (new Date(0,0,0,end[0],end[1]) - new Date(0,0,0,start[0],start[1])) / 1000 / 60;
                 if (diff > 0) {
-                    let h = Math.floor(diff/60);
-                    let m = diff % 60;
+                    let h = Math.floor(diff/60); let m = diff % 60;
                     durInput.value = (h > 0 ? h + "h " : "") + (m > 0 ? m + "m" : "");
                 }
             }
@@ -179,40 +130,25 @@
                 if (task.done) li.classList.add("completed");
                 li.innerHTML = `
                     <div class="task-main">
-                        <span class="time-display">${task.from} - ${task.to}</span>
-                        <div class="task-info">
-                            <span class="task-title">${task.text}</span>
-                            <span class="duration-label">زمان: ${task.dur}</span>
-                        </div>
+                        <span class="time-display">${task.from}-${task.to}</span>
+                        <span class="task-title">${task.text} <span class="dur-tag">(${task.dur})</span></span>
                     </div>
                     <div class="actions">
                         <i class="fas fa-edit btn-edit" onclick="editTask(${index})"></i>
                         <i class="fas fa-check-circle btn-check" onclick="toggleTask(${index})"></i>
-                        <i class="fas fa-trash-alt btn-del" onclick="deleteTask(${index})"></i>
+                        <i class="fas fa-trash btn-del" onclick="deleteTask(${index})"></i>
                     </div>`;
                 todoList.appendChild(li);
             });
             document.getElementById("totalCount").textContent = tasks.length;
-            localStorage.setItem("final_todo_app", JSON.stringify(tasks));
+            localStorage.setItem("ultra_todo", JSON.stringify(tasks));
         }
 
         addBtn.onclick = () => {
             if (inputBox.value.trim()) {
-                const taskData = {
-                    text: inputBox.value,
-                    from: fromInput.value || "00:00",
-                    to: toInput.value || "00:00",
-                    dur: durInput.value || "--",
-                    done: false
-                };
-                if (editIndex !== null) {
-                    tasks[editIndex] = taskData;
-                    editIndex = null;
-                    addBtn.innerHTML = 'ثبت کار <i class="fas fa-plus"></i>';
-                    addBtn.style.background = "#6366f1";
-                } else {
-                    tasks.push(taskData);
-                }
+                const taskData = { text: inputBox.value, from: fromInput.value || "00:00", to: toInput.value || "00:00", dur: durInput.value || "--", done: false };
+                if (editIndex !== null) { tasks[editIndex] = taskData; editIndex = null; addBtn.innerText = "ثبت"; }
+                else { tasks.push(taskData); }
                 inputBox.value = ""; fromInput.value = ""; toInput.value = ""; durInput.value = "";
                 render();
             }
@@ -221,20 +157,15 @@
         window.editTask = (index) => {
             const t = tasks[index];
             inputBox.value = t.text; fromInput.value = t.from; toInput.value = t.to; durInput.value = t.dur;
-            editIndex = index;
-            addBtn.innerHTML = 'ذخیره تغییرات <i class="fas fa-save"></i>';
-            addBtn.style.background = "#f59e0b";
-            window.scrollTo(0,0);
+            editIndex = index; addBtn.innerText = "ذخیره";
         };
-
         window.toggleTask = (i) => { tasks[i].done = !tasks[i].done; render(); };
-        window.deleteTask = (i) => { if(confirm("حذف شود؟")) { tasks.splice(i, 1); render(); } };
+        window.deleteTask = (i) => { if(confirm("حذف؟")) { tasks.splice(i, 1); render(); } };
         window.toggleExportMode = () => {
             document.body.classList.toggle("screenshot-mode");
-            document.getElementById("exportBtn").textContent = 
-                document.body.classList.contains("screenshot-mode") ? "ویرایش" : "حالت تصویر";
+            document.getElementById("exportBtn").innerText = document.body.classList.contains("screenshot-mode") ? "بازگشت" : "حالت تصویر";
         };
-        document.getElementById("clearBtn").onclick = () => { if(confirm("لیست کاملاً پاک شود؟")) { tasks = []; render(); } };
+        document.getElementById("clearBtn").onclick = () => { if(confirm("پاکسازی کل لیست؟")) { tasks = []; render(); } };
         render();
     </script>
 </body>
